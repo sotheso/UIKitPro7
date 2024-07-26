@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  UIKitPro7
 //
-//  Created by Sothesom on 05/05/1403.
+//  Created by Sothesom on 05/05/1403.NSAllowsArbitraryLoads
 //
 
 import UIKit

@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "scoreLabel.translatesAutoresizingMaskIntoConstraints"
+            key = "IDEPreferLogStreaming"
             value = "YES"
             isEnabled = "YES">
          </EnvironmentVariable>
