@@ -19,7 +19,11 @@ class ViewController: UIViewController {
     var activatedButtons = [UIButton]()
     var solutions = [String]()
     
-    var score = 0
+    var score = 0 {
+        didSet{
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     var level = 1
     
     override func loadView() {
@@ -169,7 +173,7 @@ class ViewController: UIViewController {
             
             currentAnswer.text = ""
             score += 1
-            
+                        
             if score % 7 == 0 {
                 let ac = UIAlertController(title: "Well done!", message: "اماده مرحله بعدی هستی؟", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "برو بریم", style: .default, handler: levelUp))
@@ -220,7 +224,7 @@ class ViewController: UIViewController {
                     clueString += "\(index + 1).  \(clue)\n"
                     
                     let solutionWord = answer.replacingOccurrences(of: "|", with:"")
-                    solutionString = "\(solutionWord.count) letters\n"
+                    solutionString += "\(solutionWord.count) letters\n"
                     solutions.append(solutionWord)
                     
                     let bits = answer.components(separatedBy: "|")
