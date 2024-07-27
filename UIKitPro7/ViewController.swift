@@ -149,15 +149,54 @@ class ViewController: UIViewController {
     }
     
     @objc func letterTapped (_ sender: UIButton) {
+        guard let buttonTitle = sender.titleLabel?.text else { return }
         
+        currentAnswer.text = currentAnswer.text?.appending(buttonTitle)
+        activatedButtons.append(sender)
+        sender.isHidden = true
     }
     
     @objc func submitTapped (_ sender: UIButton) {
+        // کدام راه حل با کلمه مطابقت دارد
+        guard let answersText = currentAnswer.text else { return }
+         
+        if let solutionsPosition = solutions.firstIndex(of: answersText){
+            activatedButtons.removeAll()
+            
+            var splitAnswers = answersLabel.text?.components(separatedBy: "\n")
+            splitAnswers?[solutionsPosition] = answersText
+            answersLabel.text = splitAnswers?.joined(separator: "\n")
+            
+            currentAnswer.text = ""
+            score += 1
+            
+            if score % 7 == 0 {
+                let ac = UIAlertController(title: "Well done!", message: "اماده مرحله بعدی هستی؟", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "برو بریم", style: .default, handler: levelUp))
+                present(ac, animated: true)
+            }
+        }
+    }
+    
+    func levelUp(action: UIAlertAction) {
+        level += 1
         
+        solutions.removeAll(keepingCapacity: true)
+        loadlevel()
+        
+        for button in activatedButtons {
+            button.isHidden = false
+        }
     }
     
     @objc func clearTapped (_ sender: UIButton) {
+        currentAnswer.text = ""
         
+        for button in activatedButtons {
+            button.isHidden = false
+        }
+        
+        activatedButtons.removeAll()
     }
     
     func loadlevel() {
