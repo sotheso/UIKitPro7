@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     var cluesLabel: UILabel!
     var answersLabel: UILabel!
     // پاسخ فعلی
@@ -79,7 +79,7 @@ class ViewController: UIViewController {
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
         
-
+        
         // ---- وضعیت قرارگیری شون (محدودیت هاشون)
         NSLayoutConstraint.activate([
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
@@ -117,7 +117,7 @@ class ViewController: UIViewController {
         let width = 150
         let height = 80
         let spacing: CGFloat = 10
-
+        
         
         for row in 0..<4 {
             for column in 0..<5 {
@@ -127,27 +127,27 @@ class ViewController: UIViewController {
                 letterButton.addTarget(self, action: #selector(letterTapped), for: .touchUpInside)
                 
                 let frame = CGRect(
-                            x: CGFloat(column) * (CGFloat(width) + spacing),
-                            y: CGFloat(row) * (CGFloat(height) + spacing),
-                            width: CGFloat(width),
-                            height: CGFloat(height))
+                    x: CGFloat(column) * (CGFloat(width) + spacing),
+                    y: CGFloat(row) * (CGFloat(height) + spacing),
+                    width: CGFloat(width),
+                    height: CGFloat(height))
                 letterButton.frame = frame
                 buttonsView.addSubview(letterButton)
                 letterButtons.append(letterButton)
             }
         }
-//        
-//        cluesLabel.backgroundColor = .red
-//        answersLabel.backgroundColor = .blue
-//        buttonsView.backgroundColor = .green
+        //
+        //        cluesLabel.backgroundColor = .red
+        //        answersLabel.backgroundColor = .blue
+        //        buttonsView.backgroundColor = .green
     }
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        loadlevel()
     }
-
+    
     @objc func letterTapped (_ sender: UIButton) {
         
     }
@@ -159,13 +159,44 @@ class ViewController: UIViewController {
     @objc func clearTapped (_ sender: UIButton) {
         
     }
-//    
-//    func loadlevel() {
-//        var clueString = ""
-//        var solutionString = ""
-//        var letterBits = [String]()
+    
+    func loadlevel() {
+        // ایجاد یک رشته سرنخ
+        var clueString = ""
+        // رشته حل
+        var solutionString = ""
+        // بیت های حرفی
+        var letterBits = [String]()
         
-//        if let levelFileURL= B
+        if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt"){
+            if let levelContects = try? String(contentsOf: levelFileURL){
+                var lines = levelContects.components(separatedBy: "\n")
+                lines.shuffle()
+                
+                for(index, line) in lines.enumerated() {
+                    let parts = line.components (separatedBy:": ")
+                    let answer = parts[0]
+                    let clue = parts [1]
+                    
+                    clueString += "\(index + 1).  \(clue)\n"
+                    
+                    let solutionWord = answer.replacingOccurrences(of: "|", with:"")
+                    solutionString = "\(solutionWord.count) letters\n"
+                    solutions.append(solutionWord)
+                    
+                    let bits = answer.components(separatedBy: "|")
+                    letterBits += bits
+                }
+            }
+        }
+        cluesLabel.text = clueString.trimmingCharacters(in:.whitespacesAndNewlines)
+        answersLabel.text = solutionString.trimmingCharacters(in: .whitespacesAndNewlines)
+        letterButtons.shuffle()
+        
+        if letterButtons.count == letterBits.count {
+            for i in 0..<letterButtons.count {
+                letterButtons[i].setTitle(letterBits[i], for: .normal)
+            }
+        }
     }
 }
-
